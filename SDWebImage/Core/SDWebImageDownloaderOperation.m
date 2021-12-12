@@ -433,6 +433,8 @@ didReceiveResponse:(NSURLResponse *)response
 
 #pragma mark NSURLSessionTaskDelegate
 
+// 分享, 从网络加载数据之后, 进行相关 UIImage 的构建工作.
+// 使用各种 Coder 进行 Decode 之后, UIImage 中 CGImage 已经有值.
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     // If we already cancel the operation or anything mark the operation finished, don't callback twice
     if (self.isFinished) return;
@@ -568,7 +570,12 @@ didReceiveResponse:(NSURLResponse *)response
                             imageData:(nullable NSData *)imageData
                                 error:(nullable NSError *)error
                              finished:(BOOL)finished {
+    if (image) {
+        NSLog(@"%@", image);
+    }
     NSArray<id> *completionBlocks = [self callbacksForKey:kCompletedCallbackKey];
+    // 在, 加载完真正的图片数据之后, 主动进行了线程的切换.
+    // 使用者在主线程完成 Image 的使用.
     dispatch_main_async_safe(^{
         for (SDWebImageDownloaderCompletedBlock completedBlock in completionBlocks) {
             completedBlock(image, imageData, error, finished);

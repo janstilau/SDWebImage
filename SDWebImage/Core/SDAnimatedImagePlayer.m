@@ -349,14 +349,14 @@
             if (!self) {
                 return;
             }
-            UIImage *frame = [animatedProvider animatedImageFrameAtIndex:fetchFrameIndex];
-
-            BOOL isAnimating = self.displayLink.isRunning;
-            if (isAnimating) {
-                SD_LOCK(self->_lock);
-                self.frameBuffer[@(fetchFrameIndex)] = frame;
-                SD_UNLOCK(self->_lock);
-            }
+//            UIImage *frame = [animatedProvider animatedImageFrameAtIndex:fetchFrameIndex];
+//
+//            BOOL isAnimating = self.displayLink.isRunning;
+//            if (isAnimating) {
+//                SD_LOCK(self->_lock);
+//                self.frameBuffer[@(fetchFrameIndex)] = frame;
+//                SD_UNLOCK(self->_lock);
+//            }
         }];
         [self.fetchQueue addOperation:operation];
     }

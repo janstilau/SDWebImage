@@ -13,6 +13,7 @@
 #import "UIImage+Metadata.h"
 #import "SDInternalMacros.h"
 
+// 分享: 从文件缓存系统中, 读取 Data, 解析出 UIImage 出来. 
 UIImage * _Nullable SDImageCacheDecodeImageData(NSData * _Nonnull imageData, NSString * _Nonnull cacheKey, SDWebImageOptions options, SDWebImageContext * _Nullable context) {
     UIImage *image;
     BOOL decodeFirstFrame = SD_OPTIONS_CONTAINS(options, SDWebImageDecodeFirstFrameOnly);

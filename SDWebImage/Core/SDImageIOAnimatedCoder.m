@@ -187,6 +187,12 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
     return frameDuration;
 }
 
+/*
+    真正生成 UIImage 的过程.
+    Download 完之后会调用.
+    从缓存里面读取数据会调用;
+    动图的播放, 会调用.
+ */
 + (UIImage *)createFrameAtIndex:(NSUInteger)index source:(CGImageSourceRef)source scale:(CGFloat)scale preserveAspectRatio:(BOOL)preserveAspectRatio thumbnailSize:(CGSize)thumbnailSize options:(NSDictionary *)options {
     // Some options need to pass to `CGImageSourceCopyPropertiesAtIndex` before `CGImageSourceCreateImageAtIndex`, or ImageIO will ignore them because they parse once :)
     // Parse the image properties
@@ -230,6 +236,14 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
             NSUInteger rasterizationDPI = maxPixelSize * DPIPerPixel;
             decodingOptions[kSDCGImageSourceRasterizationDPI] = @(rasterizationDPI);
         }
+        
+        /*
+         SDWebImage 维护者博客.
+         https://dreampiggy.com/2019/01/18/%E4%B8%BB%E6%B5%81%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E5%BA%93%E6%89%80%E4%BD%BF%E7%94%A8%E7%9A%84%E9%A2%84%E8%A7%A3%E7%A0%81%E7%A9%B6%E7%AB%9F%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88/
+         
+         所以基本上各种图片库解码，为了解码压缩格式，得到一个CGImage，都是用了Image/IO的这个API：
+         CGImageSourceCreateImageAtIndex
+         */
         imageRef = CGImageSourceCreateImageAtIndex(source, index, (__bridge CFDictionaryRef)[decodingOptions copy]);
     } else {
         decodingOptions[(__bridge NSString *)kCGImageSourceCreateThumbnailWithTransform] = @(preserveAspectRatio);
@@ -267,6 +281,10 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
     
 #if SD_UIKIT || SD_WATCH
     UIImageOrientation imageOrientation = [SDImageCoderHelper imageOrientationFromEXIFOrientation:exifOrientation];
+    /*
+        imageRef 位图信息.
+        scale
+     */
     UIImage *image = [[UIImage alloc] initWithCGImage:imageRef scale:scale orientation:imageOrientation];
 #else
     UIImage *image = [[UIImage alloc] initWithCGImage:imageRef scale:scale orientation:exifOrientation];
@@ -280,6 +298,9 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
     return ([NSData sd_imageFormatForImageData:data] == self.class.imageFormat);
 }
 
+/*
+    最常见的 PNG, JPeg 的解析器.
+ */
 - (UIImage *)decodedImageWithData:(NSData *)data options:(nullable SDImageCoderOptions *)options {
     if (!data) {
         return nil;

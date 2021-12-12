@@ -106,6 +106,9 @@
     }
     UIImage *image;
     NSArray<id<SDImageCoder>> *coders = self.coders;
+    
+    // 遍历, 使用 canDecodeFromData 做判断.
+    // 使用 decodedImageWithData 做真正的解码的工作
     for (id<SDImageCoder> coder in coders.reverseObjectEnumerator) {
         if ([coder canDecodeFromData:data]) {
             image = [coder decodedImageWithData:data options:options];

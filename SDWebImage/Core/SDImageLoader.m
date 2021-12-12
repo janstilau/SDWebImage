@@ -29,6 +29,7 @@ void SDImageLoaderSetProgressiveCoder(id<SDWebImageOperation> operation, id<SDPr
     objc_setAssociatedObject(operation, SDImageLoaderProgressiveCoderKey, progressiveCoder, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+// 分享:
 UIImage * _Nullable SDImageLoaderDecodeImageData(NSData * _Nonnull imageData, NSURL * _Nonnull imageURL, SDWebImageOptions options, SDWebImageContext * _Nullable context) {
     NSCParameterAssert(imageData);
     NSCParameterAssert(imageURL);
@@ -91,6 +92,16 @@ UIImage * _Nullable SDImageLoaderDecodeImageData(NSData * _Nonnull imageData, NS
         }
     }
     if (!image) {
+        /*
+         imageCoder SDImageCodersManager
+         <SDImageIOCoder: 0x6000016f45f0>,
+         <SDImageGIFCoder: 0x6000011c1a40>,
+         <SDImageAPNGCoder: 0x6000011c1b60>,
+         <SDImageAWebPCoder: 0x6000011c1bc0>,
+         <SDImageHEICCoder: 0x6000011c1c80>
+         
+         各个解码器, 判断 Data 是否是自己的菜, 使用的 Data 的头几个字节的信息. 非常快.
+         */
         image = [imageCoder decodedImageWithData:imageData options:coderOptions];
     }
     if (image) {

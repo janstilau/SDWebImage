@@ -124,6 +124,10 @@ static CGFloat SDImageScaleFromPath(NSString *string) {
     if (!data || data.length == 0) {
         return nil;
     }
+    
+    /*
+        从各个解码器中, 选择出合适的, 然后解析出 UIImage, 这个时候, 还在子线程.
+     */
     data = [data copy]; // avoid mutable data
     id<SDAnimatedImageCoder> animatedCoder = nil;
     for (id<SDImageCoder>coder in [SDImageCodersManager sharedManager].coders.reverseObjectEnumerator) {

@@ -29,7 +29,7 @@ void SDImageLoaderSetProgressiveCoder(id<SDWebImageOperation> operation, id<SDPr
     objc_setAssociatedObject(operation, SDImageLoaderProgressiveCoderKey, progressiveCoder, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-// 分享:
+// 分享: 从 Data 创建 UIImage 的过程.
 UIImage * _Nullable SDImageLoaderDecodeImageData(NSData * _Nonnull imageData, NSURL * _Nonnull imageURL, SDWebImageOptions options, SDWebImageContext * _Nullable context) {
     NSCParameterAssert(imageData);
     NSCParameterAssert(imageURL);

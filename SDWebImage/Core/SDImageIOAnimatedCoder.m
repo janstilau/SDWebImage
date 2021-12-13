@@ -280,6 +280,8 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
     }
     
 #if SD_UIKIT || SD_WATCH
+    // 图片的方向信息, 是从 Exif 中获取的.
+    // 这是一个人为的属性.
     UIImageOrientation imageOrientation = [SDImageCoderHelper imageOrientationFromEXIFOrientation:exifOrientation];
     /*
         imageRef 位图信息.
